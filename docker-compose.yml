@@ -1,9 +1,14 @@
+networks:
+    private_network:
+      driver: bridge
+
 services:
+  
   wordpress:
     image: wordpress:php8.3-apache
     container_name: wordpress
     ports:
-      - "8000:80"
+      - "80:80"
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
@@ -13,6 +18,8 @@ services:
       - ./wp-content:/var/www/html/wp-content
     depends_on:
       - db
+    networks:
+      - private_network
 
   db:
     image: mysql:5.7
@@ -26,6 +33,8 @@ services:
       MYSQL_PASSWORD: wordpress
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - private_network
 
 volumes:
   db_data:
